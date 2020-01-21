@@ -16,7 +16,9 @@ double euclidean_norm(int n, double *A[n]);
 
 int step = 0;
 
+int inc;
 
+int q; //dummy variable to check boundary condition .
 
 double a[e][e],pi[e],l[e][e],u[e][e],temp_col[e],temp_row[e];
 
@@ -25,12 +27,20 @@ pthread_mutex_t mutex;
 void *myThreadFun(void* y)
 {
     int k_prime, k,i,j;
-    int start = step++;
 
+    int start1 = inc * step++;
+    int start;
+    int start2 = start1+inc;
+    int *r = (int*)y;
+    if(q == *r)
+    {
+       start2 = e;
+    }
 
-    for(start=0;start<e;start++){
+    printf("%d %d\n",start1,start2);
+    for(start=start1;start<start2;start++){
       k = start;
-    printf("start = %d\n",k);
+
     double max=0;
     for(i=start;i<e;i++)
     {
@@ -110,6 +120,8 @@ int main()
 	scanf("%d",&no_threads);
 	printf("\n");
 
+  inc = e/no_threads;
+  q = no_threads;
 	// omp_set_num_threads(no_threads);
   //
 	// clock_t t;
@@ -196,11 +208,11 @@ int main()
   // Pthread;
 
   pthread_t threads[no_threads];
-
-  for(int z=0;z<no_threads;z++)
+  int z;
+  for(z=0;z<no_threads;z++)
   {
-      int* p;
-      pthread_create(&threads[z], NULL,myThreadFun , (void*)(p));
+
+      pthread_create(&threads[z], NULL,myThreadFun , &z);
   }
 
   for(int z=0;z<no_threads;z++)
