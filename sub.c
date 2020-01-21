@@ -26,7 +26,11 @@ void *myThreadFun(void* y)
 {
     int k_prime, k,i,j;
     int start = step++;
-    k = start;
+
+
+    for(start=0;start<e;start++){
+      k = start;
+    printf("start = %d\n",k);
     double max=0;
     for(i=start;i<e;i++)
     {
@@ -56,6 +60,16 @@ void *myThreadFun(void* y)
       pthread_mutex_unlock(&mutex);
 
 		}
+
+    for (i = 0; i < k; i++)
+		{
+			  tmp=l[k][i];
+		    pthread_mutex_lock(&mutex);
+				l[k][i]=l[k_prime][i];
+				l[k_prime][i]=tmp;
+			  pthread_mutex_unlock(&mutex);
+		}
+
     pthread_mutex_lock(&mutex);
     u[k][k]=a[k][k];
     for(int t=k+1;t<e;t++)
@@ -80,6 +94,8 @@ void *myThreadFun(void* y)
         pthread_mutex_unlock(&mutex);
 			}
 		}
+
+  }
 
 }
 
