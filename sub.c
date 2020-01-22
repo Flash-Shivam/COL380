@@ -6,8 +6,8 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define e 3
-
+#define ee 8000
+int e;
 void matrix_mult(int n, double *A[n], double *B[n],double *result[n]);
 void matrix_sub(int n, double *A[n], double *B[n],double *result[n]);
 void print_matrix(int n, double *A[n]);
@@ -20,7 +20,7 @@ int inc;
 
 int q; //dummy variable to check boundary condition .
 
-double a[e][e],pi[e],l[e][e],u[e][e],temp_col[e],temp_row[e];
+double a[ee][ee],pi[ee],l[ee][ee],u[ee][ee],temp_col[ee],temp_row[ee];
 
 pthread_mutex_t mutex;
 
@@ -37,7 +37,7 @@ void *myThreadFun(void* y)
        start2 = e;
     }
 
-    printf("%d %d\n",start1,start2);
+    // printf("%d %d\n",start1,start2);
     for(start=start1;start<start2;start++){
       k = start;
 
@@ -113,8 +113,8 @@ int main()
 {
 	int n;
 	printf("Enter the size of the matrix: ");
-	// scanf("%d",&n);
-  n = e;
+	scanf("%d",&n);
+  e =  n;
 	int no_threads;
 	printf("Enter the no. of threads to be used: ");
 	scanf("%d",&no_threads);
@@ -122,57 +122,48 @@ int main()
 
   inc = e/no_threads;
   q = no_threads;
-	// omp_set_num_threads(no_threads);
-  //
-	// clock_t t;
-	// t=clock();
+
+	clock_t t;
+	t=clock();
 
 	double x;
-  // 	struct drand48_data randBuffer;
-  //
-  // 	srand48_r(time(NULL), &randBuffer);
+  	struct drand48_data randBuffer;
+
+  	srand48_r(time(NULL), &randBuffer);
   	int i,j;
 
-	// double *a[n];
-  //   	for (i=0; i<n; i++)
-  //       	a[i] = (double *)malloc(n * sizeof(double));
+
 
 	double *c[n];
 	for (i=0; i<n; i++)
         	c[i] = (double *)malloc(n * sizeof(double));
 
-	// #pragma omp parallel for private(j,x)
+
 	for(i=0;i<n;i++)
 	{
-		// printf("%d\n", omp_get_thread_num());
 		for(j=0;j<n;j++)
 		{
+      x = 0;
+      while(x==0){
 
-				// drand48_r(&randBuffer, &x);
-        scanf("%lf",&x);
-				a[i][j] = x;
+				drand48_r(&randBuffer, &x);
+
+				a[i][j] = 100 * x;
 				c[i][j] = a[i][j];
+
+      }
 
 		}
 	}
 
-	// print_matrix(n, a);
-	// printf("\n");
 
-	// double *pi;
-	// pi = (double *)malloc(n*sizeof(double));
 
-	// #pragma omp parallel for
 	for(i=0;i<n;i++)
 	{
 		pi[i]=i;
 	}
 
-	// double *u[n];
-	// for (i=0; i<n; i++)
-  //       	u[i] = (double *)malloc(n * sizeof(double));
 
-	// #pragma omp parallel for private(j)
 	for(i=0;i<n;i++)
 	{
 		for(j=0;j<n;j++)
@@ -181,11 +172,6 @@ int main()
 		}
 	}
 
-	// double *l[n];
-	// for (i=0; i<n; i++)
-  //       	l[i] = (double *)malloc(n * sizeof(double));
-
-	// #pragma omp parallel for private(j)
 	for(i=0;i<n;i++)
 	{
 		for (j = 0; j < n; j++)
@@ -197,13 +183,7 @@ int main()
 		}
 	}
 
-	// double *temp_row;
-	// temp_row = (double *)malloc((n)*sizeof(double));
-  //
-	// double *temp_col;
-	// temp_col = (double *)malloc((n)*sizeof(double));
 
-	int k_prime, k;
 
   // Pthread;
 
@@ -223,9 +203,9 @@ int main()
   //
 
 
-	// t = clock() - t;
-	// double time_taken = ((double)t)/CLOCKS_PER_SEC;
-	// printf("Time taken: %f\n",time_taken);
+	t = clock() - t;
+	double time_taken = ((double)t)/CLOCKS_PER_SEC;
+	printf("Time taken: %f\n",time_taken);
 
 	double *P[n];
 	for (i=0; i<n; i++)
@@ -258,47 +238,7 @@ int main()
 	// // print_matrix(n, res);
 	// printf("Euclidean Norm: %f\n",euclidean_norm(n,res));
   //
-	// //Free Memory
-	// free(pi);
-	// free(temp_col);
-	// free(temp_row);
-	// for (i=0; i<n; i++)
-	// {
-	// 	free(a[i]);
-	// 	free(c[i]);
-	// 	free(u[i]);
-	// 	free(l[i]);
-	// 	free(P[i]);
-	// }
-  for(i=0;i<n;i++)
-  {
-    for(j=0;j<n;j++)
-    {
-      printf("%lf ",l[i][j]);
-    }
 
-      printf("\n");
-  }
-
-  for(i=0;i<n;i++)
-  {
-    for(j=0;j<n;j++)
-    {
-      printf("%lf ",u[i][j]);
-    }
-
-    printf("\n");
-  }
-
-  for(i=0;i<n;i++)
-  {
-    for(j=0;j<n;j++)
-    {
-      printf("%lf ",P[i][j]);
-    }
-
-    printf("\n");
-  }
 
 
 	return 0;
