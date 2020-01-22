@@ -8,10 +8,6 @@
 
 #define ee 8000
 int e;
-void matrix_mult(int n, double *A[n], double *B[n],double *result[n]);
-void matrix_sub(int n, double *A[n], double *B[n],double *result[n]);
-void print_matrix(int n, double *A[n]);
-double euclidean_norm(int n, double *A[n]);
 
 
 int step = 0;
@@ -222,81 +218,57 @@ int main()
 		}
 	}
 
-	// double *left[n];
-	// for (i=0; i<n; i++)
-  //       	left[i] = (double *)malloc(n * sizeof(double));
-	// matrix_mult(n,P,c,left);
-	// double *right[n];
-	// for (i=0; i<n; i++)
-  //       	right[i] = (double *)malloc(n * sizeof(double));
-	// matrix_mult(n,l,u,right);
-	// double *res[n];
-	// for (i=0; i<n; i++)
-  //       	res[i] = (double *)malloc(n * sizeof(double));
-	// matrix_sub(n,left,right,res);
-  //
-	// // print_matrix(n, res);
-	// printf("Euclidean Norm: %f\n",euclidean_norm(n,res));
-  //
-
-
-
-	return 0;
-}
-
-void matrix_mult(int n, double *A[n], double *B[n],double *result[n])
-{
-	int i, j, k;
-	for (i = 0; i < n; i++)
+  double left[n][n],right[n][n],res[n][n];
+  int k;
+  for (i = 0; i < n; i++)
 	{
 		for (j = 0; j < n; j++)
 		{
-			result[i][j] = 0;
+			left[i][j] = 0;
 			for (k = 0; k < n; k++)
 			{
-				result[i][j] += A[i][k]*B[k][j];
+				left[i][j] += P[i][k]*c[k][j];
 			}
 		}
 	}
-}
 
-void matrix_sub(int n, double *A[n], double *B[n],double *result[n])
-{
-	int i, j;
-	for (i = 0; i < n; i++)
+  for (i = 0; i < n; i++)
 	{
 		for (j = 0; j < n; j++)
 		{
-			result[i][j]=A[i][j]-B[i][j];
+			right[i][j] = 0;
+			for (k = 0; k < n; k++)
+			{
+				right[i][j] += l[i][k]*u[k][j];
+			}
 		}
 	}
-}
 
-void print_matrix(int n, double *A[n])
-{
-	for (int i = 0; i < n; i++)
+
+  for (i = 0; i < n; i++)
 	{
-		for (int j = 0; j < n; j++)
+		for (j = 0; j < n; j++)
 		{
-		    printf("%f\t", A[i][j]);
+			res[i][j]=left[i][j]-right[i][j];
+    //  printf("%lf ",res[i][j]);
 		}
-		printf("\n");
+    // printf("\n");
 	}
-}
 
-double euclidean_norm(int n, double *A[n])
-{
-	double result;
+
+  double result;
 
 	for(int j=0; j<n; j++)
 	{
 		double temp=0;
 		for(int i=0; i<n; i++)
 		{
-			temp += A[i][j]*A[i][j];
+			temp += res[i][j]*res[i][j];
 		}
 		result += sqrt(temp);
 	}
 
-	return result;
+  printf("Norm = %lf\n",result);
+
+	return 0;
 }
